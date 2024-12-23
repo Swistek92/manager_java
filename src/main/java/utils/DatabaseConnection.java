@@ -22,6 +22,7 @@ public class DatabaseConnection {
             if (connection == null || connection.isClosed()) {
                 connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
                 System.out.println("Connection to MySQL database has been established.");
+                System.out.println("Connection to MySQL database has been established.");
             }
         } catch (SQLException e) {
             System.err.println("Failed to connect to the database: " + e.getMessage());
