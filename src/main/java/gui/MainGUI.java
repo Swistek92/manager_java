@@ -1,7 +1,9 @@
 package gui;
 
 import model.Student;
+import service.StudentController;
 import service.StudentManagerImpl;
+import utils.Validators;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +14,7 @@ public class MainGUI extends JFrame {
     private ButtonPanel buttonPanel;
     private OutputPanel outputPanel;
     private StudentManagerImpl studentManager;
+    private StudentController studentController;
 
     public MainGUI() {
         setTitle("Student Management System");
@@ -24,6 +27,7 @@ public class MainGUI extends JFrame {
         buttonPanel = new ButtonPanel();
         outputPanel = new OutputPanel();
         studentManager = new StudentManagerImpl(); // Inicjalizacja menedżera studentów
+        studentController = new StudentController(studentManager, outputPanel); // Inicjalizacja kontrolera studentów
 
         // Ustawienie rozmiarów paneli
         inputPanel.setPreferredSize(new Dimension(800, 150));
@@ -69,55 +73,25 @@ public class MainGUI extends JFrame {
     }
 
     private void addStudent() {
-        String studentId = inputPanel.getStudentIdField().getText();
-        String name = inputPanel.getNameField().getText();
-        String ageText = inputPanel.getAgeField().getText();
-        String gradeText = inputPanel.getGradeField().getText();
-
-        try {
-            int age = Integer.parseInt(ageText);
-            double grade = Double.parseDouble(gradeText);
-            if (studentId.isEmpty() || name.isEmpty()) {
-                outputPanel.appendMessage("Error: Student ID and Name cannot be empty.\n");
-            } else {
-                Student student = new Student(studentId, name, age, grade);
-                studentManager.addStudent(student);
-                outputPanel.appendMessage("Student added: " + student.getName() + "\n");
-            }
-        } catch (NumberFormatException ex) {
-            outputPanel.appendMessage("Error: Invalid age or grade format.\n");
-        }
+        studentController.addStudent(
+            inputPanel.getStudentIdField().getText(),
+            inputPanel.getNameField().getText(),
+            inputPanel.getAgeField().getText(),
+            inputPanel.getGradeField().getText()
+        );
     }
 
     private void removeStudent() {
-        String studentId = inputPanel.getStudentIdField().getText();
-        if (studentId.isEmpty()) {
-            outputPanel.appendMessage("Error: Please enter a student ID to remove.\n");
-        } else {
-            studentManager.removeStudent(studentId);
-            outputPanel.appendMessage("Student removed: ID=" + studentId + "\n");
-        }
+        studentController.removeStudent(inputPanel.getStudentIdField().getText());
     }
 
     private void updateStudent() {
-        String studentId = inputPanel.getStudentIdField().getText();
-        String name = inputPanel.getNameField().getText();
-        String ageText = inputPanel.getAgeField().getText();
-        String gradeText = inputPanel.getGradeField().getText();
-
-        try {
-            int age = Integer.parseInt(ageText);
-            double grade = Double.parseDouble(gradeText);
-            if (studentId.isEmpty() || name.isEmpty()) {
-                outputPanel.appendMessage("Error: Student ID and Name cannot be empty.\n");
-            } else {
-                Student student = new Student(studentId, name, age, grade);
-                studentManager.updateStudent(student);
-                outputPanel.appendMessage("Student updated: " + student.getName() + "\n");
-            }
-        } catch (NumberFormatException ex) {
-            outputPanel.appendMessage("Error: Invalid age or grade format.\n");
-        }
+        studentController.updateStudent(
+            inputPanel.getStudentIdField().getText(),
+            inputPanel.getNameField().getText(),
+            inputPanel.getAgeField().getText(),
+            inputPanel.getGradeField().getText()
+        );
     }
 
     private void displayStudents() {

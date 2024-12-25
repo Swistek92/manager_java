@@ -108,4 +108,29 @@ public class StudentManagerImpl implements StudentManager {
         }
         return 0.0;
     }
+
+    /**
+     * Pobiera studenta na podstawie jego ID.
+     * @param studentId Unikalny identyfikator studenta.
+     * @return Obiekt studenta lub null, jeśli nie znaleziono.
+     */
+    public Student getStudentById(String studentId) {
+        final String sql = "SELECT * FROM students WHERE studentID = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String id = rs.getString("studentID");
+                    String name = rs.getString("name");
+                    int age = rs.getInt("age");
+                    double grade = rs.getDouble("grade");
+                    return new Student(id, name, age, grade);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving student by ID: " + e.getMessage());
+        }
+        return null;
+    }
 }
