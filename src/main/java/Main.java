@@ -1,5 +1,4 @@
 import gui.MainGUI;
-import io.github.cdimascio.dotenv.Dotenv;
 import utils.DatabaseConnection;
 
 import javax.swing.*;
