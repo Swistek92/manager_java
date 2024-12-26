@@ -9,37 +9,40 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final Dotenv dotenv = Dotenv.load(); // Ładuje zmienne z pliku .env
+
+//   Ładowanie zmiennych z pliku .env
+    private static final Dotenv dotenv = Dotenv.load(); 
     private static final String DATABASE_URL = dotenv.get("DATABASE_URL");
     private static final String DATABASE_USER = dotenv.get("DATABASE_USER");
     private static final String DATABASE_PASSWORD = dotenv.get("DATABASE_PASSWORD");
-    // Stałe z wbudowanymi zmiennymi konfiguracyjnymi
-    // private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/student_management";
-    // private static final String DATABASE_USER = "root";
-    // private static final String DATABASE_PASSWORD = "0011000101011001011011010011000101110111010101100110110000110010011011000011001001001011010101100100011101000110";
 
     private static final HikariConfig config = new HikariConfig();
     private static final HikariDataSource dataSource;
 
     static {
-        config.setJdbcUrl(DATABASE_URL);
-        config.setUsername(DATABASE_USER);
-        config.setPassword(DATABASE_PASSWORD);
+        try {
+            // Ustawienia konfiguracji HikariCP
+            config.setJdbcUrl(DATABASE_URL);
+            config.setUsername(DATABASE_USER);
+            config.setPassword(DATABASE_PASSWORD);
 
-        // Opcjonalne ustawienia konfiguracji puli
-        config.setMaximumPoolSize(10); // Maksymalna liczba połączeń w puli
-        config.setMinimumIdle(2); // Minimalna liczba nieaktywnych połączeń
-        config.setIdleTimeout(30000); // Czas bezczynności połączenia w milisekundach
-        config.setConnectionTimeout(30000); // Maksymalny czas oczekiwania na połączenie w milisekundach
-        config.setLeakDetectionThreshold(2000); // Czas wykrywania wycieków połączeń
+            // Opcjonalne ustawienia puli połączeń
+            config.setMaximumPoolSize(10); // Maksymalna liczba połączeń w puli
+            config.setMinimumIdle(2); // Minimalna liczba nieaktywnych połączeń
+            config.setIdleTimeout(30000); // Czas bezczynności połączenia w milisekundach
+            config.setConnectionTimeout(30000); // Maksymalny czas oczekiwania na połączenie w milisekundach
+            config.setLeakDetectionThreshold(2000); // Czas wykrywania wycieków połączeń
 
-        dataSource = new HikariDataSource(config);
+            dataSource = new HikariDataSource(config);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize connection pool: " + e.getMessage(), e);
+        }
     }
 
     /**
-     * Returns a connection from the connection pool.
-     * 
-     * @return Connection object
+     * Zwraca połączenie z puli połączeń.
+     *
+     * @return Obiekt Connection
      */
     public static Connection getConnection() {
         try {
@@ -51,7 +54,7 @@ public class DatabaseConnection {
     }
 
     /**
-     * Closes the connection pool when the application is shutting down.
+     * Zamyka pulę połączeń przy zamykaniu aplikacji.
      */
     public static void closePool() {
         if (dataSource != null) {

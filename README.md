@@ -37,3 +37,27 @@
 - **HikariCP**: zarządza pulą połączeń do bazy danych, co zwiększa wydajność i stabilność w obsłudze wielu zapytań.
 - **JUnit Jupiter**: platforma do pisania i uruchamiania testów jednostkowych, zapewniając wysoką jakość kodu.
 - **Mockito Core i Inline**: umożliwiają mockowanie zależności, np. `StudentManagerImpl`, w testach jednostkowych, pozwalając na izolację logiki testowanej klasy.
+
+## Uruchomienie aplikacji
+
+### Opcja 1: MySQL zainstalowane lokalnie
+
+1. Zainstaluj MySQL na swoim komputerze.
+2. Utwórz bazę danych `student_management`.
+3. Zapytanie SQL, które przygotowuje tabelę do projektu, znajduje się w pliku `resources/CreateTable.sql`.
+4. Uzupełnij plik `.env` w katalogu głównym projektu, podając odpowiednie dane połączenia do bazy danych:
+   ```env
+   DATABASE_URL=jdbc:mysql://localhost:3306/student_management
+   DATABASE_USER=twoj_uzytkownik
+   DATABASE_PASSWORD=twoje_haslo
+   ```
+5. Uruchom aplikację za pomocą IDE lub komendy Maven:
+   ```sh
+   mvn clean install
+   mvn exec:java -Dexec.mainClass="main.Main"
+   ```
+
+### Opcja 2: Uruchomienie za pomocą Docker
+
+1. Upewnij się, że masz zainstalowany Docker na swoim komputerze.
+2. Przejdź do katalogu `db-projekt` i zapoznaj się z plikiem `README.md`.
