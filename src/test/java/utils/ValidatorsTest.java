@@ -1,7 +1,6 @@
 package utils;
 
 import gui.OutputPanel;
-import utils.Validators;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
